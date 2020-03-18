@@ -48,6 +48,18 @@ function showMainMenu() {
                     addDepartment();
                     break;
 
+                case "View All Departments":
+                    viewAll("department");
+                    break;
+
+                case "View All Roles":
+                    viewAll("role");
+                    break;
+
+                case "View All Employees":
+                    viewAll("employee");
+                    break;
+
                 case "Exit":
                     connection.end();
                     break;
@@ -74,4 +86,13 @@ function addDepartment() {
                 showMainMenu();
             });
         });
+}
+
+// Console log all of the records in a given table
+function viewAll(tableName) {
+    var query = "SELECT * FROM ??";
+    connection.query(query, [tableName], function(err, res) {
+        console.table(res);
+        showMainMenu();
+    });
 }
