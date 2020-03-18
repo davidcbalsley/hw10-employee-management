@@ -1,2 +1,2 @@
-# hw10-employee-management
-HW10: repository for the employee management homework assignment
+# hw10-employee-tracker
+HW10: repository for the employee tracker homework assignment
