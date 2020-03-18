@@ -53,11 +53,11 @@ function showMainMenu() {
                     break;
 
                 case "View All Departments":
-                    viewAll("department");
+                    viewAllDepartments();
                     break;
 
                 case "View All Roles":
-                    viewAll("role");
+                    viewAllRoles();
                     break;
 
                 case "View All Employees":
@@ -95,18 +95,57 @@ function addDepartment() {
 // Prompt the user for a role and add it to the role table
 function addRole() {
     inquirer
-        .prompt({
-            name: "role",
-            type: "input",
-            message: "Which role would you like to add?"
-        })
+        .prompt([
+            {
+                name: "role",
+                type: "input",
+                message: "Which role would you like to add?"
+            },
+            {
+                name: "salary",
+                type: "input",
+                message: "What is the salary for this role?"
+            }
+        ])
+        .then(function(roleAnswer) {
+            // Get the list of departments 
+            var query = "SELECT * FROM department";
+            connection.query(query, function(err, res) {
+                // console.log(res);
+
+            });
+        });
 }
 
-// Console log all of the records in a given table
-function viewAll(tableName) {
-    var query = "SELECT * FROM ??";
-    connection.query(query, [tableName], function(err, res) {
+// Console log all of the departments
+function viewAllDepartments() {
+    var query = "SELECT name FROM department";
+    connection.query(query, function(err, res) {
+        // Insert a blank row
+        console.log("\n");
+
+        // Output the list of departments
         console.table(res);
+
+        // Prompt the user for the next action
+        showMainMenu();
+    });
+}
+
+// Console log all of the roles
+function viewAllRoles() {
+    var query = "SELECT role.id, role.title, role.salary, department.name AS department ";
+    query += "FROM role ";
+    query += "JOIN department ON role.department_id = department.id";
+
+    connection.query(query, function(err, res) {
+        // Insert a blank row
+        console.log("\n");
+
+        // Output the list of employees
+        console.table(res);
+
+        // Prompt the user for the next action
         showMainMenu();
     });
 }
@@ -131,5 +170,5 @@ function viewAllEmployees() {
 
         // Prompt the user for the next action
         showMainMenu();
-    })
+    });
 }
