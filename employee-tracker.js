@@ -48,6 +48,10 @@ function showMainMenu() {
                     addDepartment();
                     break;
 
+                case "Add Role":
+                    addRole();
+                    break;
+
                 case "View All Departments":
                     viewAll("department");
                     break;
@@ -57,7 +61,7 @@ function showMainMenu() {
                     break;
 
                 case "View All Employees":
-                    viewAll("employee");
+                    viewAllEmployees();
                     break;
 
                 case "Exit":
@@ -88,6 +92,16 @@ function addDepartment() {
         });
 }
 
+// Prompt the user for a role and add it to the role table
+function addRole() {
+    inquirer
+        .prompt({
+            name: "role",
+            type: "input",
+            message: "Which role would you like to add?"
+        })
+}
+
 // Console log all of the records in a given table
 function viewAll(tableName) {
     var query = "SELECT * FROM ??";
@@ -95,4 +109,27 @@ function viewAll(tableName) {
         console.table(res);
         showMainMenu();
     });
+}
+
+// Console log all of the employees
+function viewAllEmployees() {
+    var query = "SELECT e1.id, e1.first_name, e1.last_name, role.title, department.name AS department, role.salary, CONCAT(e2.first_name, SPACE(1), e2.last_name) AS manager ";
+    query += "FROM employee e1 ";
+    query += "JOIN role ON e1.role_id = role.id ";
+    query += "JOIN department ON role.department_id = department.id ";
+    query += "LEFT JOIN employee e2 ON e1.manager_id = e2.id";
+
+    // I figured out how to join a table to itself from 
+    // https://www.sqlservertutorial.net/sql-server-basics/sql-server-self-join/
+
+    connection.query(query, function(err, res) {
+        // Insert a blank row
+        console.log("\n");
+
+        // Output the list of employees
+        console.table(res);
+
+        // Prompt the user for the next action
+        showMainMenu();
+    })
 }
